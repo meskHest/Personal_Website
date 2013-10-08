@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div id="projects">
+    <ul class="thumbnails">
+        @foreach (var item in ViewBag.Projects)
+        {
+            <li class="span3 thumbnail trick">
+                <a href="#" class="">
+                    <img data-src="holder.js/220x180" alt="">
+                </a>
+                <h5 style="padding:10px;padding-bottom:0px;">@item.Name</h5>
+                <div class="row-fluid">
+                    <div class="span12" style="padding:10px;padding-top:0px;min-height:110px;">
+                        
+                        <p>@item.Caption</p>
+                    </div>
+                </div>
+                @Html.ActionLink("Show story", "ViewProject", new { id = item.Id }, new { @class = "btn btn-info" })
+            </li>
+        }
+    </ul>
+
+</div>
+
+
+
+@section Hero{
+    <div class="row-fluid" id="card">
+        <div class="span8">
+            <div class="row-fluid">
+                @ViewBag.Card.Name
+            </div>
+            <div class="row-fluid small">
+                <small><i>@string.Concat(ViewBag.Card.Title, ", ", ViewBag.Card.Employer)</i></small>
+            </div>
+
+            <div class="row-fluid">
+                <p class="smallFont"><a href="">@ViewBag.Card.Mail</a></p>
+            </div>
+
+            <div class="row-fluid">
+                <p class="smallFont">@string.Concat(ViewBag.Card.Hometown, ", ", ViewBag.Card.Country)</p>
+            </div>
+
+            <div class="row-fluid">
+
+                <br />
+                <small><b>Skills</b></small>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <ul>
+                            @foreach (var s in ViewBag.Card.Skills)
+                            {
+                                <li>@s.Name</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+            <img src="" class="img-polaroid" id="gravatarImage" />
+        </div>
+    </div>
+    <input type="hidden" id="gravMail" value="@ViewBag.Card.Mail.ToLower()" />
+}
+
+
+@section AboutMe
+{
+    <div class="row-fluid heading">
+        About me
+    </div>    
+
+}
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            var name = $("#gravMail").val();
+
+            var displayGravatar = function (name) {
+                return "http://www.gravatar.com/avatar/" + hex_md5(name) + "?s=200&d=mm";
+            };
+
+            var setGravatar = function (name) {
+                $("#gravatarImage").attr("src", displayGravatar(name));
+            };
+
+            setGravatar(name);
+        });
+    </script>
+}

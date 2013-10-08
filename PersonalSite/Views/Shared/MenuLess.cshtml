@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+
+    <link href="~/Content/Bootstrap/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Bootstrap/Css/bootstrap-responsive.min.css" rel="stylesheet" />
+
+       <link href="~/Content/Bootstrap/Css/docs.css" rel="stylesheet" />
+        <link href="~/Content/css/Master.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.8.3.min.js"></script>
+    <script src="~/Content/Bootstrap/Js/bootstrap.min.js"></script>
+    <script src="~/Content/Bootstrap/Js/Holder.js"></script>
+    <!-- <script src="~/Content/Bootstrap/Js/Sidebar.js"></script>-->
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+        <header id="map_canvas"></header>
+    <div class="span12 mainWrapper container" style="margin-top:190px;">
+
+
+        <div class="row">
+
+            <!--/.well -->
+
+            <!--/span-->
+
+            <div class="span12">
+                <div class="row-fluid">
+                    @RenderBody()
+                </div>
+                <!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+    </div>
+    <!--/row-->
+
+    <!--/.fluid-container-->
+
+    <hr>
+
+    <footer>
+        <p>&copy; Fredrik Olsson 2013 
+            @if (User.Identity.Name == "")
+            {
+                   <span style="float:right; margin-right:20px;"> @Html.ActionLink("  ", "SignIn", "Home", null, new { @class="icon icon-lock" }) </span>
+            }
+            else
+            {
+                <span style="float:right; margin-right:20px;"> Signed in as @User.Identity.Name  &nbsp; &nbsp; @Html.ActionLink("  ", "SignOut", "User", null, new { @class="icon icon-share-alt" }) </span>
+            }
+        </p>
+    </footer>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/md5.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).resize(function () {
+                console.log($(window).width());
+            });
+            var map;
+            var brooklyn = new google.maps.LatLng(57.09063, 12.27147);
+
+            var MY_MAPTYPE_ID = 'hiphop';
+
+            function initialize() {
+
+                var stylez = [
+  {
+      "stylers": [
+        { "hue": "#0011ff" },
+        { "saturation": -100 },
+        { "lightness": -43 }
+      ]
+  }, {
+      "featureType": "landscape",
+      "stylers": [
+        { "saturation": -99 },
+        { "lightness": 51 }
+      ]
+  }, {
+      "elementType": "labels.text.fill",
+      "stylers": [
+        { "saturation": 100 },
+        { "lightness": 100 }
+      ]
+  }, {
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        { "saturation": -100 },
+        { "lightness": -52 }
+      ]
+  }
+                ];
+
+                var mapOptions = {
+                    zoom: 7,
+                    center: brooklyn,
+                    disableDefaultUI: true,
+                    mapTypeControlOptions: {
+                        mapTypeIds: [google.maps.MapTypeId.ROADMAP, MY_MAPTYPE_ID]
+                    },
+                    mapTypeId: MY_MAPTYPE_ID
+                };
+
+                map = new google.maps.Map(document.getElementById('map_canvas'),
+                    mapOptions);
+
+                var styledMapOptions = {
+                    name: 'Black'
+                };
+
+                var jayzMapType = new google.maps.StyledMapType(stylez, styledMapOptions);
+
+                map.mapTypes.set(MY_MAPTYPE_ID, jayzMapType);
+
+                var marker = new google.maps.Marker({
+                    position: brooklyn,
+                    map: map,
+                    title: ''
+                });
+            }
+            initialize();
+        });
+
+
+
+
+    </script>
+</body>
+</html>

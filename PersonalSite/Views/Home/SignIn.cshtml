@@ -1,0 +1,29 @@
+﻿@model PersonalSite.ViewModels.LoginUserModel
+
+@{
+    ViewBag.Title = "SignIn";
+    Layout = "~/Views/Shared/MenuLess.cshtml";
+}
+<div class="row-fluid">
+    <div class="span5"></div>
+    <div class="span3">
+<h2>Sign in</h2>
+@using(Html.BeginForm("Authenticate","User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+@Html.LabelFor(x=>x.Mail)
+@Html.EditorFor(x=>x.Mail)
+<br />
+@Html.LabelFor(x=>x.Password)
+@Html.EditorFor(x=>x.Password)
+<br />
+<input type="submit" value="Sign in" class="btn btn-info" />
+}
+        </div>
+    <div class="span4 alert alert-info">
+        <p>
+            This part of the website is only for the administrator of the website. If you're not an administrator please go @Html.ActionLink("back", "Index", null ,null)
+        </p>
+
+    </div>
+    </div>
