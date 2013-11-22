@@ -8,5 +8,6 @@ namespace PersonalSite.Entities
     public class Image : Entity
     {
         public virtual string Url { get; set; }
+        public virtual string ProjectId { get; set; }
     }
 }

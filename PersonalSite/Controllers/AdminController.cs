@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,7 +19,7 @@ namespace PersonalSite.Controllers
     [Authorize]
     public class AdminController : Controller
     {
-                private readonly IDataRepository _dataRepository;
+        private readonly IDataRepository _dataRepository;
 
         public AdminController()
         {
@@ -68,9 +69,9 @@ namespace PersonalSite.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddProject(ProjectViewModel p)
+        public ActionResult AddProject(ProjectViewModel p, HttpPostedFileBase CoverImage)
         {
-            
+            string fileName = "noImage.png";
             string capt;
 
             if (p.Description.Length > 80)
@@ -82,14 +83,26 @@ namespace PersonalSite.Controllers
                 capt = p.Description;
             }
 
+
+            if (CoverImage != null && CoverImage.ContentLength > 0)
+            {
+                fileName = Path.GetFileName(CoverImage.FileName);
+                var path = Path.Combine(Server.MapPath("~/Upload"), fileName);
+                CoverImage.SaveAs(path);
+            }
+
+
+
             var id = _dataRepository.Save<Project>(new Project
             {
                 Name = p.Name,
                 Created = DateTime.Now,
                 Client = p.Client,
                 Description = p.Description,
+                Ingress = p.Ingress,
                 Caption = capt,
-                User = _dataRepository.Query<User>(x=>x.Mail == User.Identity.Name)
+                CoverImg = fileName,
+                User = _dataRepository.Query<User>(x => x.Mail == User.Identity.Name)
             });
 
             return RedirectToAction("Index");
@@ -109,6 +122,7 @@ namespace PersonalSite.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult EditProject(ProjectViewModel p, int id)
         {
 
@@ -127,9 +141,10 @@ namespace PersonalSite.Controllers
             projectToUpdate.Name = p.Name;
             projectToUpdate.Client = p.Client;
             projectToUpdate.Description = p.Description;
+            projectToUpdate.Ingress = p.Ingress;
             projectToUpdate.Caption = capt;
 
-            var test = _dataRepository.Update<Project>(projectToUpdate);
+            _dataRepository.Update(projectToUpdate);
 
             return RedirectToAction("Index");
         }

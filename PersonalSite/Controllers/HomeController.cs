@@ -42,6 +42,7 @@ namespace PersonalSite.Controllers
             //    Name = "test",
             //    Description = "Detta är ett test som man vet att man kan lita på, när laxar leker i luftballongen så vet man att det är någto sjukt jävla fel... Varför leker de inte i bollhavet?",
             //    Client = "nill",
+            //    CoverImg = "",
             //    Created = DateTime.Now
             //});
             //lstproj.Add(new Project
@@ -49,6 +50,7 @@ namespace PersonalSite.Controllers
             //    Name = "test2",
             //    Description = "Detta är ett andra test som avslöjar sälar som sympatiserar med sovjet!",
             //    Client = "nill",
+            //    CoverImg = "",
             //    Created = DateTime.Now
             //});
             //lstproj.Add(new Project
@@ -56,6 +58,7 @@ namespace PersonalSite.Controllers
             //    Name = "test3",
             //    Description = "Det mest extrema test som är testigt värre, man kan undra om datorn har skrivit detta själv... eller?",
             //    Client = "nill",
+            //    CoverImg = "",
             //    Created = DateTime.Now
             //});
 
@@ -126,9 +129,6 @@ namespace PersonalSite.Controllers
             //    Hash = SecurityHelper.GenerateHash("Password", salt),
             //});
 
-
-
-
             User usr = _dataRepository.Get<User>(1);
 
             CardContent card = new CardContent
@@ -136,16 +136,20 @@ namespace PersonalSite.Controllers
                 Title = usr.Title,
                 Name = usr.Name,
                 Mail = usr.Mail,
-                Hometown=usr.HomeTown,
-                Country=usr.Country,
+                Hometown = usr.HomeTown,
+                Country = usr.Country,
                 Skills = usr.Skills.ToList(),
                 Employer = usr.Employer
             };
 
+            var viewModel = new StartViewModel();
+            viewModel.LatestProjects = GetLatestProjects();
+            viewModel.Projects = GetRestProjects();
+            viewModel.Card = card;
 
             ViewBag.Card = card;
             ViewBag.Projects = usr.Projects;
-            return View();
+            return View(viewModel);
         }
 
         public ActionResult SignIn()
@@ -157,12 +161,30 @@ namespace PersonalSite.Controllers
         public ActionResult ViewProject(int Id)
         {
             var project = _dataRepository.Get<Project>(Id);
-
-
-
-
             return View();
         }
+
+
+
+        #region Helpers
+
+        public List<Project> GetLatestProjects()
+        {
+            var listOfProject = _dataRepository.All<Project>().ToList();
+            if (listOfProject.Count > 3)
+                listOfProject = listOfProject.OrderByDescending(project => project.Created).Take(3).ToList();
+
+            return listOfProject;
+        }
+
+        public List<Project> GetRestProjects()
+        {
+            var listOfProject = _dataRepository.All<Project>().OrderByDescending(project => project.Created).Skip(3).ToList();
+            return listOfProject;
+        }
+
+
+        #endregion
 
     }
 }

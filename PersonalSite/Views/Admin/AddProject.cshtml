@@ -6,7 +6,7 @@
 }
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("AddProject", "Admin", FormMethod.Post, new { EncType = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true)
 
@@ -34,6 +34,19 @@
 
             </div>
             <div class="span4">
+                <div class="editor-label">
+                    @Html.LabelFor(model=> model.CoverImage)
+                </div>
+                <div class="editor-field">
+                    <input type="file" name="CoverImage"/>
+                </div>
+                <div class="editor-label">
+                    @Html.LabelFor(x=>x.Ingress)
+                </div>
+                                                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Ingress, new { @style = "height:100px;width:350px;" })
+                    @Html.ValidationMessageFor(model => model.Ingress)
+                </div>
 
                 <div class="editor-label">
                     @Html.LabelFor(model => model.Description)
@@ -42,9 +55,7 @@
                     @Html.TextAreaFor(model => model.Description, new { @style = "height:200px;width:350px;" })
                     @Html.ValidationMessageFor(model => model.Description)
                 </div>
-
-
-                
+                               
 
             </div>
 

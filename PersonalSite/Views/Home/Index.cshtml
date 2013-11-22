@@ -1,33 +1,73 @@
-﻿@{
+﻿@using System.Collections.Specialized
+@model PersonalSite.ViewModels.StartViewModel
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
+@section Projects
+{
+    <div class="row-fluid">
+        <div class="span12" id="projects">
+            <ul class="thumbnails">
+                @foreach (var item in Model.LatestProjects)
+                {
+                    <li class="span4 thumbnail">
+                        <div class="row-fluid">
+                            <img class="span12 thumbnail"src="../../Upload/@item.CoverImg" alt="" style="height: 100px;" />
+                        </div>
+                        <h5 style="padding: 10px; padding-bottom: 0px;">@item.Name</h5>
+                        <div class="row-fluid">
+                            <div class="span12" style="padding: 10px; padding-top: 0px; min-height: 110px;">
+                                <p>@Html.Raw(item.Caption)</p>
+                            </div>
+                        </div>
+                        @Html.ActionLink("Show story", "ViewProject", "Project", new {id = item.Id}, new {@class = "btn btn-info"})
+                    </li>
+                }
+            </ul>
 
-<div id="projects">
-    <ul class="thumbnails">
-        @foreach (var item in ViewBag.Projects)
-        {
-            <li class="span3 thumbnail trick">
-                <a href="#" class="">
-                    <img data-src="holder.js/220x180" alt="">
-                </a>
-                <h5 style="padding:10px;padding-bottom:0px;">@item.Name</h5>
-                <div class="row-fluid">
-                    <div class="span12" style="padding:10px;padding-top:0px;min-height:110px;">
-                        
-                        <p>@item.Caption</p>
-                    </div>
-                </div>
-                @Html.ActionLink("Show story", "ViewProject", new { id = item.Id }, new { @class = "btn btn-info" })
-            </li>
-        }
+        </div>
+    </div>
+        <div class="row-fluid">
+        <div class="span12" id="otherProjects" style="display:none;">
+            <ul class="thumbnails">
+                @foreach (var item in Model.Projects)
+                {
+                    <li class="span3 thumbnail">
+                        <div class="row-fluid">
+                            <img class="span12 thumbnail"src="../../Upload/@item.CoverImg" alt="" style="height: 100px;" />
+                        </div>
+                        <h5 style="padding: 10px; padding-bottom: 0px;">@item.Name</h5>
+                        <div class="row-fluid">
+                            <div class="span12" style="padding: 10px; padding-top: 0px; min-height: 110px;">
+                                <p>@Html.Raw(item.Caption)</p>
+                            </div>
+                        </div>
+                        @Html.ActionLink("Show story", "ViewProject", "Project", new {id = item.Id}, new {@class = "btn btn-info"})
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </div>
+    
+        <div class="row-fluid">
+        <div class="span4"></div>
+        <button id="btnOtherProjects" class="btn btn-info span4">Show more...</button>
+        <div class="span4"></div>
+    </div>
+}
+
+@section Menu{
+    <ul class="nav nav-list bs-docs-sidenav affix">
+        <li class="active"><a href="#" data-id="card">Business card <i class="icon-chevron-right"></i></a></li>
+        <li><a href="#" data-id="projects">Projects <i class="icon-chevron-right"></i></a></li>
+        <li><a href="#" data-id="about">About me<i class="icon-chevron-right"></i></a></li>
     </ul>
-
-</div>
-
-
+}
 
 @section Hero{
     <div class="row-fluid" id="card">
@@ -50,13 +90,13 @@
             <div class="row-fluid">
 
                 <br />
-                <small><b>Skills</b></small>
+                <small><b>Experience</b></small>
                 <div class="row-fluid">
                     <div class="span12">
                         <ul>
                             @foreach (var s in ViewBag.Card.Skills)
                             {
-                                <li>@s.Name</li>
+                                <li class="badge-info badge">@s.Name</li>
                             }
                         </ul>
                     </div>
@@ -71,21 +111,19 @@
 }
 
 
-@section AboutMe
+@*@section AboutMe
 {
     <div class="row-fluid heading">
-        About me
-    </div>    
+        <div class="span12" style="background-color: #eee; border-bottom: 3px solid #333;">About me</div>
+    </div>
 
-}
+}*@
 
 
 @section Scripts
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
-
             var name = $("#gravMail").val();
 
             var displayGravatar = function (name) {
@@ -97,6 +135,15 @@
             };
 
             setGravatar(name);
+            
+            
+
+            $("#btnOtherProjects").click(function () {
+                $("#otherProjects").slideToggle();
+            });
+
+
+
         });
     </script>
 }
